@@ -12,4 +12,5 @@ def register(request):
     if request.method == 'GET':
         return redirect('/')
     if request.method == 'POST':
+    
         return redirect('/success')
