@@ -32,5 +32,14 @@ def user_login(request):
     if request.method == 'GET':
         return redirect('/')
     if request.method == 'POST':
-    
-        return redirect('/success')
+        login_errors = User.objects.login_validator(request.POST)
+        login_email = request.POST['login_email']
+        if len(login_errors) > 0:
+            for key, value in errors.items():
+                messages.error(request, value)
+            return redirect('/')
+        else:
+            user_list = User.objects.filter(email=login_email) 
+            user = user_list[0]
+            if user.password == request.POST['login_pass']:
+                return redirect('/success')
