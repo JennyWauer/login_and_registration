@@ -15,8 +15,6 @@ def success(request):
     return render(request, 'success.html', context)
 
 def register(request):
-    if request.method == 'GET':
-        return redirect('/')
     if request.method == 'POST':
         errors = User.objects.basic_validator(request.POST)
         if len(errors) > 0:
@@ -27,6 +25,7 @@ def register(request):
             User.objects.create(first_name=request.POST['first_name'],last_name=request.POST['last_name'],email=request.POST['email'],password=request.POST['password'])
             request.session['name'] = request.POST['first_name']
             return redirect('/success')
+    return redirect('/')
 
 def user_login(request):
     if request.method == 'GET':
