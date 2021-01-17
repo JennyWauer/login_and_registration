@@ -11,10 +11,10 @@ def home(request):
     return render(request, 'home.html')
 
 def success(request):
-    if 'user_id' in request.session:
+    if 'userid' in request.session:
         user = User.objects.filter(id=request.session['userid'])
         if user:
-            contect = {
+            context = {
                 "user": user[0]
             }
         return render(request, 'success.html', context)
@@ -48,10 +48,10 @@ def user_login(request):
     if request.method == 'GET':
         return redirect('/')
     if request.method == 'POST':
-        user = User.objects.filter(username=request.POST['login_email'])
+        user = User.objects.filter(email=request.POST['login_email'])
         if user:
             logged_user = user[0] 
-            if bcrypt.checkpw(request.POST['login_password'].encode(), logged_user.password.encode()):
+            if bcrypt.checkpw(request.POST['login_pass'].encode(), logged_user.password.encode()):
                 request.session['userid'] = logged_user.id
                 return redirect('/success')
         return redirect("/")
