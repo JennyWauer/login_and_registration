@@ -48,14 +48,10 @@ def user_login(request):
     if request.method == 'GET':
         return redirect('/')
     if request.method == 'POST':
-        login_errors = User.objects.login_validator(request.POST)
-        login_email = request.POST['login_email']
-        if len(login_errors) > 0:
-            for key, value in errors.items():
-                messages.error(request, value)
-            return redirect('/')
-        else:
-            user_list = User.objects.filter(email=login_email) 
-            user = user_list[0]
-            if user.password == request.POST['login_pass']:
+        user = User.objects.filter(username=request.POST['login_email'])
+        if user:
+            logged_user = user[0] 
+            if bcrypt.checkpw(request.POST['login_password'].encode(), logged_user.password.encode()):
+                request.session['userid'] = logged_user.id
                 return redirect('/success')
+        return redirect("/")
