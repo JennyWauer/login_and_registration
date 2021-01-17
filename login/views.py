@@ -28,7 +28,7 @@ def register(request):
                 first_name=request.POST['first_name'],
                 last_name=request.POST['last_name'],
                 email=request.POST['email'],
-                password=request.POST['password']
+                password=pw_hash
             )
             request.session['userid'] = new_user.id
             messages.success(request, "User successfully created")
