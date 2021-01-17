@@ -4,15 +4,21 @@ from .models import *
 
 from django.contrib import messages
 
+import bcrypt
+
 # Create your views here.
 def home(request):
     return render(request, 'home.html')
 
 def success(request):
-    context = {
-        "user": request.session['name'],
-    }
-    return render(request, 'success.html', context)
+    if 'user_id' in request.session:
+        user = User.objects.filter(id=request.session['userid'])
+        if user:
+            contect = {
+                "user": user[0]
+            }
+        return render(request, 'success.html', context)
+    return redirect('/')
 
 def register(request):
     if request.method == 'POST':
