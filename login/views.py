@@ -22,8 +22,16 @@ def register(request):
                 messages.error(request, value)
             return redirect('/')
         else:
-            User.objects.create(first_name=request.POST['first_name'],last_name=request.POST['last_name'],email=request.POST['email'],password=request.POST['password'])
-            request.session['name'] = request.POST['first_name']
+            password = request.POST['password']
+            pw_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()    
+            new_user = User.objects.create(
+                first_name=request.POST['first_name'],
+                last_name=request.POST['last_name'],
+                email=request.POST['email'],
+                password=request.POST['password']
+            )
+            request.session['userid'] = new_user.id
+            messages.success(request, "User successfully created")
             return redirect('/success')
     return redirect('/')
 
