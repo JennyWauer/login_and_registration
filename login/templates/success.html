@@ -8,6 +8,13 @@
     <title>Welcome</title>
 </head>
 <body class="p-3">
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
     <a class="text-info float-right mr-3" href="/">Log Out</a>
     <h1>Success! Welcome, {{ user.first_name }}!</h1>
     <p class="text-success">Successfully registered (or logged in)!</p>
