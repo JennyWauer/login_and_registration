@@ -23,6 +23,9 @@ def success(request):
 def register(request):
     if request.method == 'POST':
         errors = User.objects.basic_validator(request.POST)
+        if User.objects.filter(email=request.POST['email']):
+            messages.error(request, 'Email is already registered. Please login!')
+            return redirect('/')
         if len(errors) > 0:
             for key, value in errors.items():
                 messages.error(request, value)
