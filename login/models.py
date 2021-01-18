@@ -25,7 +25,6 @@ class UserManager(models.Manager):
         if not password == conf_password:
             errors["password"] = "Your passwords do not match"
         return errors
-    # Need to fix validator - checking length not if in database
 
     def login_validator(self, postData):
         login_errors = {}
