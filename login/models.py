@@ -2,10 +2,13 @@ from django.db import models
 import re
 
 # Create your models here.
+
+
 class UserManager(models.Manager):
     def basic_validator(self, postData):
         errors = {}
-        email_check = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
+        email_check = re.compile(
+            r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
         password = postData['password']
         conf_password = postData['conf_password']
         if len(postData['first_name']) < 2:
@@ -14,12 +17,16 @@ class UserManager(models.Manager):
             errors["last_name"] = "You last name should be at least 3 characters"
         if not email_check.match(postData['email']):
             errors["email"] = "Your email should be a valid email"
+        email_exist = self.filter(email=postData['email'])
+        if email_exist:
+            errors['email'] = "Email already in use"
         if len(postData['password']) < 8:
-            errors["password_len"] = "Your password should be at least 8 characters" 
+            errors["password_len"] = "Your password should be at least 8 characters"
         if not password == conf_password:
             errors["password"] = "Your passwords do not match"
         return errors
     # Need to fix validator - checking length not if in database
+
     def login_validator(self, postData):
         login_errors = {}
         login_pass = postData['login_pass']
@@ -31,6 +38,7 @@ class UserManager(models.Manager):
             if not user.password == login_pass:
                 errors["login_password"] = "Password does not match user email"
         return login_errors
+
 
 class User(models.Model):
     first_name = models.CharField(max_length=255)
